@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> The 8x8 Maze </title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <style type="text/css">
+
+        
+    body {
+        font-family: Helvetica, Arial, Sans-Serif;
+    }
+    .cell {
+        width:40px;
+        height:40px;
+        float:left;
+        border:solid 1px white;
+        background-color:black;
+    }
+
+    .player {
+        width:20px;
+        height:20px;
+        background-color:blue;
+        border-radius:10px;
+        margin-left:10px;
+        margin-top:10px;
+    }
+
+    .key {
+        height:40px; 
+        width:40px; 
+        border-radius:15px; 
+        border:solid 1px rgb(50, 50, 50);
+    }
+    </style>
+</head>
+
+
+<body style="background-color: powderblue;">
+
+	
+
+    <div style="width:50%; height:100%; float:left">
+        <h1 align="center" style="color:tomato"> The Maze </h1>
+        <h3 style="color:brown">Controls</h3>
+        <div> 
+            <button id="moveUpButton" onclick="move('U')" style="width: 50%; margin: 0 auto;">Move Up</button></div>
+    	<div>
+            <button id="moveLeftButton" onclick="move('L')" style="width: 25%; margin: 0 auto;">Move Left</button>
+    	    <button id="moveRightButton" onclick="move('R')" style="width: 25%; margin: 0 auto;">Move Right</button>
+        </div>
+    	<div>
+            <button id="moveDownButton" onclick="move('D')" style="width: 50%; margin: 0 auto;">Move Down</button>
+        </div>
+        
+    	<h3 id="hitPoints">Hit Point : </h3>
+    	<h3 id="prizes">Total Prizes : </h3>
+    	<h3 id="pos">Current Position : </h3>
+        <h3 id="goal">You Need to reach : </h3>
+    	<h3 id="demo">Current Condition : </h3>
+    </div>
+
+    <div style="width:50%; height:100%; float:right;">
+        <div id="map" style="height:336px; width:336px; margin-left:100px">
+            <div id='row0col0' class='cell' style="border-radius: 15px 0px 0px 0px"></div>
+            <div id='row0col1' class='cell'></div>
+            <div id='row0col2' class='cell'></div>
+            <div id='row0col3' class='cell'></div>
+            <div id='row0col4' class='cell'></div>
+            <div id='row0col5' class='cell'></div>
+            <div id='row0col6' class='cell'></div>
+            <div id='row0col7' class='cell' style="border-radius: 0px 15px 0px 0px"></div>
+            <div id='row1col0' class='cell'></div>
+            <div id='row1col1' class='cell'></div>
+            <div id='row1col2' class='cell'></div>
+            <div id='row1col3' class='cell'></div>
+            <div id='row1col4' class='cell'></div>
+            <div id='row1col5' class='cell'></div>
+            <div id='row1col6' class='cell'></div>
+            <div id='row1col7' class='cell'></div>
+            <div id='row2col0' class='cell'></div>
+            <div id='row2col1' class='cell'></div>
+            <div id='row2col2' class='cell'></div>
+            <div id='row2col3' class='cell'></div>
+            <div id='row2col4' class='cell'></div>
+            <div id='row2col5' class='cell'></div>
+            <div id='row2col6' class='cell'></div>
+            <div id='row2col7' class='cell'></div>
+            <div id='row3col0' class='cell'></div>
+            <div id='row3col1' class='cell'></div>
+            <div id='row3col2' class='cell'></div>
+            <div id='row3col3' class='cell'></div>
+            <div id='row3col4' class='cell'></div>
+            <div id='row3col5' class='cell'></div>
+            <div id='row3col6' class='cell'></div>
+            <div id='row3col7' class='cell'></div>
+            <div id='row4col0' class='cell'></div>
+            <div id='row4col1' class='cell'></div>
+            <div id='row4col2' class='cell'></div>
+            <div id='row4col3' class='cell'></div>
+            <div id='row4col4' class='cell'></div>
+            <div id='row4col5' class='cell'></div>
+            <div id='row4col6' class='cell'></div>
+            <div id='row4col7' class='cell'></div>
+            <div id='row5col0' class='cell'></div>
+            <div id='row5col1' class='cell'></div>
+            <div id='row5col2' class='cell'></div>
+            <div id='row5col3' class='cell'></div>
+            <div id='row5col4' class='cell'></div>
+            <div id='row5col5' class='cell'></div>
+            <div id='row5col6' class='cell'></div>
+            <div id='row5col7' class='cell'></div>
+            <div id='row6col0' class='cell'></div>
+            <div id='row6col1' class='cell'></div>
+            <div id='row6col2' class='cell'></div>
+            <div id='row6col3' class='cell'></div>
+            <div id='row6col4' class='cell'></div>
+            <div id='row6col5' class='cell'></div>
+            <div id='row6col6' class='cell'></div>
+            <div id='row6col7' class='cell'></div>
+            <div id='row7col0' class='cell' style="border-radius: 0px 0px 0px 15px"></div>
+            <div id='row7col1' class='cell'></div>
+            <div id='row7col2' class='cell'></div>
+            <div id='row7col3' class='cell'></div>
+            <div id='row7col4' class='cell'></div>
+            <div id='row7col5' class='cell'></div>
+            <div id='row7col6' class='cell'></div>
+            <div id='row7col7' class='cell' style="border-radius: 0px 0px 15px 0px"></div>
+        </div>
+        <div id="keySet" style="height:100px; width:336px; margin-left:100px; margin-top:20px">
+            <div style="width:336px; height:50px"><div class = "key" style="float:left;background-color: black"></div> 
+                <p style="float:left; margin-left:20px; margin-top:10px;width:81px">Unexplored</p>
+            <div class = "key" style="float:left; margin-left:20px;background-color: rgb(255, 165, 0)"></div> 
+                <p style="float:left; margin-left:20px; margin-top:10px">Wall</p></div>
+        <div style="width:336px; height:50px">
+            <div class = "key" style="float:left; background-color: rgb(255, 153, 255)"></div> 
+                <p style="float:left; margin-left:20px; margin-top:10px; width:81px">Prize</p>
+            <div class = "key" style="float:left; margin-left:20px;background-color: rgb(153, 153, 153)"></div> 
+            <p style="float:left; margin-left:20px; margin-top:10px">Fence</p></div>
+            <div style="width:336px; height:50px">
+            <div class = "key" style="float:left; background-color: rgb(255, 77, 77)"></div> 
+            <p style="float:left; margin-left:20px; margin-top:10px;width:81px">Monster</p>
+            <div class = "key" style="float:left; margin-left:20px;background-color: rgb(57, 172, 115)"></div> 
+            <p style="float:left; margin-left:20px; margin-top:10px">Destination</p></div>
+            <div style="width:336px; height:50px"><div class = "key" style="float:left; background-color: rgb(217, 217, 217)"></div> 
+            <p style="float:left; margin-left:20px; margin-top:10px">Blank</p></div>
+        </div>
+    </div>
+	<script>
+
+    // Global variables
+    var level;
+    var adventurer;
+    var gameStatus = 0; // 0 means ongoing, 1 means already won, -1 mean you lost
+
+    //variable for keyboard input
+    var KEY_LEFT = 37;
+    var KEY_RIGHT = 39;
+    var KEY_UP = 38;
+    var KEY_DOWN = 40;
+
+    $(document).ready(function (){
+        
+        // Initializing the 8xb matrix
+		level = new Array(8);
+		for (var i = 0; i < 8; i++) {
+			level[i] = new Array(8);
+		}
+		for (var i = 0; i < 8; i++) {
+			for (var j = 0; j < 8; j++) {
+				level[i][j] = new NormalBox("Blank");
+			}
+		}
+
+		// Adding Challenges
+		level[1][4] = new Monster("The Sphinx", 4, "A Diamond", "Who is US President Now? (Hint: Full name, have to capitalize the first letter)", "Donald Trump");
+		level[1][7] = new Monster("The Cyclops", 2, "1oz Gold ", "What is cosine of 60 degree?(please answer in decimal number)", 0.5);
+		level[2][1] = new Monster("The Chimera", 3, "A bike", "Who wrote this game? (Hint: Only first name, have to capitalize the first letter)", "Tom");
+		level[3][4] = new Monster("The Empusa", 10, "A Veneno Roadster Lamborghini", "How do you live without water? (Hint: One word, have to capitalize the first letter)", "Impossible");
+		level[4][3] = new Monster("The Hamster", 3, "A Vanilla Ice Cream", "What is the freezing point of water in Celsius?", 0);
+		level[5][6] = new Monster("The Charybdis", 7, "A Nail-Clip", "What is '12345679 times 63'", 777777777);
+		level[6][2] = new Monster("Cerberus", 4, "A Sun Glasses", "Beer or Bear? (Have to capitalize the first letter)", "Beer");
+		level[7][6] = new Monster("The Minotaur", 9, "A Note Book", "Cake or Pie? (Have to capitalize the first letter)", "Pie");
+
+		// Adding Walls and Fences
+		level[0][1] = new NormalBox("Fence");
+		level[0][4] = new NormalBox("Wall");
+		level[0][5] = new NormalBox("Fence");
+		level[0][6] = new NormalBox("Wall");
+		level[1][1] = new NormalBox("Wall");
+		level[1][6] = new NormalBox("Fence");
+		level[3][0] = new NormalBox("Wall");
+		level[3][1] = new NormalBox("Wall");
+		level[3][2] = new NormalBox("Wall");
+		level[4][4] = new NormalBox("Wall");
+		level[4][5] = new NormalBox("Fence");
+		level[4][7] = new NormalBox("Wall");
+		level[5][3] = new NormalBox("Wall");
+		level[5][4] = new NormalBox("Fence");
+		level[6][1] = new NormalBox("Wall");
+		level[6][3] = new NormalBox("Wall");
+
+		// Adding Free Prizes
+		level[1][2] = new NormalBox("Prize");
+		level[4][1] = new NormalBox("Prize");
+		level[6][4] = new NormalBox("Prize");
+
+		// Creating a adventurer and randomly assigning start and goal positions
+		adventurer = new Adventurer("Tom");
+		var temp1 = getRandomInt();
+		var temp2 = getRandomInt();
+		while (temp1 == temp2)
+			temp2 = getRandomInt();
+
+		var temp = 0;
+		for (var i = 0; i < 8; i++) {
+			for (var j = 0; j < 8; j++) {
+				if (temp == temp1 && (level[i][j].type == "Blank")) {
+					adventurer.xSPos = i;
+					adventurer.ySPos = j;
+					temp += 1;
+				} else if (temp == temp2 && (level[i][j].type == "Blank")) {
+					adventurer.xEPos = i;
+					adventurer.yEPos = j;
+					temp += 1;
+				} else if (level[i][j].type == "Blank") {
+					temp += 1;
+				}
+			}
+		}
+		document.getElementById("demo").innerHTML = "Current Condition : Game has started. Starting Postion is (" + adventurer.xSPos + ", " + adventurer.ySPos + "). Your goal is to reach (" + adventurer.xEPos + ", " + adventurer.yEPos + ") position. Use the up, down, right, left buttons to move. Collect at least 10 prizes before reaching the destination, then You win the game. You can get prizes by killing the monsters or in free prize locations. Good Luck!";
+		document.getElementById("hitPoints").innerHTML = "Hit Points : " + adventurer.hitPoints;
+		document.getElementById("prizes").innerHTML = "Prizes Won : " + adventurer.prizes;
+		document.getElementById("pos").innerHTML = "You are at : (" + adventurer.xSPos + ", " + adventurer.ySPos + ")";
+        document.getElementById("goal").innerHTML = "You need to reach : (" + adventurer.xEPos + ", " + adventurer.yEPos + ")";
+        var currCell = "row" + adventurer.xSPos + "col" + adventurer.ySPos;
+        document.getElementById(currCell).innerHTML = "<div class='player'></div>";
+        level[adventurer.xSPos][adventurer.ySPos].visibleOnMap = true;
+        level[adventurer.xEPos][adventurer.yEPos].visibleOnMap = true;
+
+        renderMap();
+	});
+    //end of document.ready
+
+
+        //get random position
+		function getRandomInt() {
+			return Math.floor(Math.random() * (35));
+		}
+
+		function Adventurer(name) 
+        {
+			this.name = name;
+			this.hitPoints = 30;
+			this.xSPos = 0;
+			this.ySPos = 0;
+			this.xEPos = 0;
+			this.yEPos = 0;
+			this.prizes = 0;
+			this.check = function() {
+				if ((this.xSPos == this.xEPos) && (this.ySPos == this.yEPos) && (this.prizes >= 2)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			//check move if run out of the matrix
+			this.checkMove = function(dir) {
+				if (dir == "L" || dir == "l") {
+					if (this.ySPos - 1 < 0) {
+						return false;
+					}
+				} else if (dir == "R" || dir == "r") {
+					if (this.ySPos + 1 > 7) {
+						return false;
+					}
+				} else if (dir == "U" || dir == "u") {
+					if (this.xSPos - 1 < 0) {
+						return false;
+					}
+				} else {
+					if (this.xSPos + 1 > 7) {
+						return false;
+					}
+				}
+				return true;
+			}
+			this.checkWin = function() {
+				if ((this.xSPos == this.xEPos) && (this.ySPos == this.yEPos) && (this.prizes >= 10) && (this.hitPoints >= 0)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+			this.makeMove = function(dir) {
+                var currCell = "row" + this.xSPos + "col" + this.ySPos;
+                document.getElementById(currCell).innerHTML = "";
+				if (dir == "L" || dir == "l") {
+					this.ySPos -= 1;
+				} else if (dir == "R" || dir == "r") {
+					this.ySPos += 1;
+				} else if (dir == "U" || dir == "u") {
+					this.xSPos -= 1;
+				} else {
+					this.xSPos += 1;
+				}
+				document.getElementById("pos").innerHTML = "You are at : (" + this.xSPos + ", " + this.ySPos + ")";
+                currCell = "row" + this.xSPos + "col" + this.ySPos;
+                document.getElementById(currCell).innerHTML = "<div class='player'></div>";
+
+			}
+            
+		}
+        //end of Adventurer function
+
+
+        //I tried to implement the keypress function but my game doesn't work.
+        $(document).keypress(function(e){
+        	var xPos = adventurer.xSPos;
+            var yPos = adventurer.ySPos;
+                switch(e){
+                    case KEY_LEFT://e == KEY_LEFT
+                        this.ySPos -= 1;
+                        this.checkMove(dir) = function(dir){
+                            if(dir = KEY_LEFT){
+                                if(this.ySPos -1 <0)
+                                    return false;
+                            }
+                        }
+
+                        break;
+
+                    case KEY_UP:
+                        this.xSPos -= 1;
+                        this.checkMove(dir) = function(dir){
+                            if(dir = KEY_UP){
+                                if(this.xSPos -1 <0)
+                                    return false;
+                            }
+                        }
+                        
+                        break;
+
+                    case KEY_RIGHT:
+                        this.ySPos += 1;
+                        this.checkMove(dir) = function(dir){
+                            if(dir = KEY_RIGHT){
+                                if(this.ySPos +1 >7)
+                                    return false;
+                            }
+                        }
+                        break;
+
+                    case KEY_DOWN:
+                        this.xSPos += 1;
+                        this.checkMove(dir) = function(dir){
+                            if(dir = KEY_DOWN){
+                                if(this.xSPos +1 >7)
+                                    return false;
+                            }
+                        }
+                        break;
+
+                    default:
+                    	break;
+                }
+
+                //check game status
+            	if(gameStatus == 1) {
+                alert("Congratulations!! You have won the game. Refresh the page to start a new game.");
+                return;
+           		}
+
+            	if(gameStatus == -1) {
+                alert("Sorry! You have lost the game. Refresh the page to start a new game.");
+                return;
+            	}
+
+            	if (!adventurer.checkMove(dir)) {
+                document.getElementById("demo").innerHTML = "Current Condition : Try again! You Cannot move there! Be careful!";
+                return;
+            	}
+
+            //update the map
+
+            // Wall
+            	if (level[xPos][yPos].type == "Wall") 
+            	{
+                level[xPos][yPos].visibleOnMap = true;
+                renderMap();
+                document.getElementById("demo").innerHTML = "Current Condition : Hit The Wall (" + xPos + ", " + yPos + ")";
+                return;
+           		}
+
+            // Fence
+            	if (level[xPos][yPos].type == "Fence") 
+            	{
+                level[xPos][yPos].visibleOnMap = true;
+                renderMap();
+                document.getElementById("demo").innerHTML = "Current Condition : Hit The Fence (" + xPos + ", " + yPos + ")";
+                return;
+           		}
+
+            // Free Prize
+            	if (level[xPos][yPos].type == "Prize") 
+            	{
+                level[xPos][yPos].visibleOnMap = true;
+                renderMap();
+                document.getElementById("demo").innerHTML = "Current Condition : Got Free Prize At (" + xPos + ", " + yPos + ")";
+                adventurer.makeMove(dir);
+                adventurer.prizes += 1;
+                document.getElementById("prizes").innerHTML = "Prizes Won : " + adventurer.prizes;
+                level[xPos][yPos].type = "Blank";
+                return;
+            	}
+
+            // Blank
+            	else if (level[xPos][yPos].type == "Blank") 
+            	{
+                level[xPos][yPos].visibleOnMap = true;
+                renderMap();
+                adventurer.makeMove(dir);
+                if(adventurer.checkWin())
+                	{
+                    document.getElementById("demo").innerHTML = "Current Condition : Congratulations! You Won";
+                    gameStatus = 1;
+                	}
+
+            	}
+
+            // Monster - solved
+            	else if (level[xPos][yPos].solved == true) 
+           		{
+                adventurer.makeMove(dir);
+                level[xPos][yPos].visibleOnMap = true;
+                renderMap();
+                return;
+            	}
+            
+            // Unsolved monster
+           		level[xPos][yPos].quiz(adventurer);
+            	if (adventurer.hitPoints < 0) 
+            	{
+                document.getElementById("demo").innerHTML = "Current Condition : Sorry , you don't have any hit points left. GAME OVER !";
+                gameStatus = -1;
+                return;
+            	}
+            
+            // Either monster was defeated or challenge forfeited
+            	adventurer.makeMove(dir);
+            	level[xPos][yPos].visibleOnMap = true;
+            	renderMap();
+
+        });
+
+		function NormalBox(type) {
+			this.type = type;
+            this.visibleOnMap = false;
+		}
+
+		function Monster(name, hitPoints, prize, problem, solution) {
+			this.visibleOnMap = false;
+            this.name = name;
+			this.type = "Monster";
+			this.hitPoints = hitPoints;
+			this.prize = prize;
+			this.problem = problem;
+			this.solution = solution;
+			this.solved = false;
+			this.quiz = function(a) {
+				var answer = undefined;
+				while (answer != this.solution) {
+					var check = prompt("You are standing in from the monster " + this.name + " (hit point: " +this.hitPoints + " )" + " . Do you accept this challenge? (y or n)");
+
+					if (check == "y") {
+						answer = prompt(this.problem);
+						if (answer == this.solution) {
+							document.getElementById("demo").innerHTML = "Current Condition : You Just Killed The Monster, Gained " + this.hitPoints + " Hit Points and Won the " + this.prize + " Prize";
+							a.hitPoints += this.hitPoints;
+							document.getElementById("hitPoints").innerHTML = "Hit Points : " + a.hitPoints;
+							a.prizes += 1;
+							document.getElementById("prizes").innerHTML = "Prizes Won : " + a.prizes;
+							this.solved = true;
+							break;
+						} else {
+							document.getElementById("demo").innerHTML = "Current Condition : You died, and Lost " +this.hitPoints+ " hit points.";
+							a.hitPoints -= this.hitPoints;
+                            document.getElementById("hitPoints").innerHTML = "Hit Points : " + a.hitPoints;
+                            break;
+							if (a.hitPoints < 0) break;
+                            
+						}
+					} else if (check == "n") {
+						break;
+					}
+				}
+			}
+		}
+
+
+
+
+
+        //check move status
+    	function move(dir)
+    	{
+            if(gameStatus == 1) {
+                alert("Congratulations!! You have won the game. Refresh the page to start a new game.");
+                return;
+            }
+
+            if(gameStatus == -1) {
+                alert("Sorry! You have lost the game. Refresh the page to start a new game.");
+                return;
+            }
+
+            if (!adventurer.checkMove(dir)) {
+                document.getElementById("demo").innerHTML = "Current Condition : Try again! You Cannot move there! Be careful!";
+                return;
+            }
+            
+            // Calculate new position
+            var xPos = adventurer.xSPos;
+            var yPos = adventurer.ySPos;
+            if (dir == "L" || dir == "l") {
+                yPos -= 1;
+            } else if (dir == "R" || dir == "r") {
+                yPos += 1;
+            } else if (dir == "U" || dir == "u") {
+                xPos -= 1;
+            } else {
+                xPos += 1;
+            }
+
+            // Wall
+            if (level[xPos][yPos].type == "Wall") 
+            {
+                level[xPos][yPos].visibleOnMap = true;
+                renderMap();
+                document.getElementById("demo").innerHTML = "Current Condition : Hit The Wall (" + xPos + ", " + yPos + ")";
+                return;
+            }
+
+            // Fence
+            if (level[xPos][yPos].type == "Fence") 
+            {
+                level[xPos][yPos].visibleOnMap = true;
+                renderMap();
+                document.getElementById("demo").innerHTML = "Current Condition : Hit The Fence (" + xPos + ", " + yPos + ")";
+                return;
+            } 
+
+            // Free Prize
+            if (level[xPos][yPos].type == "Prize") 
+            {
+                level[xPos][yPos].visibleOnMap = true;
+                renderMap();
+                document.getElementById("demo").innerHTML = "Current Condition : Got Free Prize At (" + xPos + ", " + yPos + ")";
+                adventurer.makeMove(dir);
+                adventurer.prizes += 1;
+                document.getElementById("prizes").innerHTML = "Prizes Won : " + adventurer.prizes;
+                level[xPos][yPos].type = "Blank";
+                return;
+            } 
+
+            // Blank
+            else if (level[xPos][yPos].type == "Blank") 
+            {
+                level[xPos][yPos].visibleOnMap = true;
+                renderMap();
+                adventurer.makeMove(dir);
+                if(adventurer.checkWin())
+                {
+                    document.getElementById("demo").innerHTML = "Current Condition : Congratulations! You Won";
+                    gameStatus = 1;
+                }
+
+            }
+
+            // Monster - solved
+            else if (level[xPos][yPos].solved == true) 
+            {
+                adventurer.makeMove(dir);
+                level[xPos][yPos].visibleOnMap = true;
+                renderMap();
+                return;
+            } 
+            
+            // Unsolved monster
+            level[xPos][yPos].quiz(adventurer);
+            if (adventurer.hitPoints < 0) 
+            {
+                document.getElementById("demo").innerHTML = "Current Condition : Sorry , you don't have any hit points left. GAME OVER !";
+                gameStatus = -1;
+                return;
+            }
+            
+            // Either monster was defeated or challenge forfeited
+            adventurer.makeMove(dir);
+            level[xPos][yPos].visibleOnMap = true;
+            renderMap();
+    	}
+
+        function renderMap ()
+        {
+            for(var i=0; i<8; i++)
+            {
+                for(var j=0; j<8; j++)
+                {
+                    if(level[i][j].visibleOnMap)
+                    {
+                        var id = "row" + i + "col" + j;
+
+                        if(level[i][j].type == "Wall")
+                            document.getElementById(id).style.backgroundColor = "rgb(255, 165, 0)";
+                        else if(level[i][j].type == "Prize")
+                            document.getElementById(id).style.backgroundColor = "rgb(255, 153, 255)";
+                        else if(level[i][j].type == "Monster" && !level[i][j].solved)
+                            document.getElementById(id).style.backgroundColor = "rgb(255, 77, 77)";
+                        else if(level[i][j].type == "Fence")
+                            document.getElementById(id).style.backgroundColor = "rgb(153, 153, 153)";
+                        else if(i == adventurer.xEPos && j == adventurer.yEPos)
+                            document.getElementById(id).style.backgroundColor = "rgb(57, 172, 115)";
+                        else // blank
+                            document.getElementById(id).style.backgroundColor = "rgb(217, 217, 217)";
+                    }
+                }
+            }
+        }
+	</script>
+
+</body>
+
+</html>
